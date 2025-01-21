@@ -1,0 +1,60 @@
+services:
+
+  vehicle_counting:
+    image: vehicle_counting
+    #devices:
+      # ls /dev/video* для получения списка камер подключенных по USB
+      #- /dev/video1:/dev/video1
+    container_name: vehicle_counting
+    privileged: true
+    environment:
+      #/dev/video1 для USB камеры
+      #- VIDEO_PATH=rtsp://admin:vvv222@192.168.1.3:554/stream2
+      #Может быть только фигурой, координаты задаются относительно велечин w (ширина кадра) и h (высота кадра)
+      #- REGION_OF_TRANSPORT_DETECTION=whole_image
+      #Может быть линией или фигурой, координаты задаются относительно велечин w (ширина кадра) и h (высота кадра) и числами
+      #- REGION_OF_COUNTING=[(w * 0, h // 2), (w * 1, h // 2), (w * 0.5, h * 0.67), (0,  h * 0.8)]
+      #Может быть только фигурой, координаты задаются относительно велечин w (ширина кадра) и h (высота кадра)
+      #- REGION_OF_PLATES_DETECTION=whole_image
+      #Подключение к базе данных
+      - DBNAME=database
+      - USER=user
+      - PASSWORD=password
+      - HOST=timescale-db
+      - PORT=5432
+      #Хост и порт для GRPC
+      - GRPC_HOST=0.0.0.0
+      - GRPC_PORT=1539
+      #Часовой пояс
+      - TZ=Europe/Moscow
+    ports:
+      - "6000:1539"
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 1024M
+
+
+
+
+  timescale-db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescale-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+volumes:
+  timescale_data:
+

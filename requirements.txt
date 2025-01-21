@@ -1,0 +1,6 @@
+psycopg2-binary==2.9.10
+numpy==1.26.4
+opencv-python==4.10.0.84
+opencv-contrib-python==3.4.13.47
+tensorflow==2.17.0
+python-daemon==2.1.1
