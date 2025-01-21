@@ -67,7 +67,7 @@ class CameraReader(object):
                             #frame = cv2.bitwise_and(frame, mask)
                             input_queue.put((line_divider, int(time.time()), cv2.resize(frame, (self.in_image_size, self.in_image_size))))
                         previous_frame = frame
-                        #print("Input queue size: {}".format(input_queue.qsize()))
+                        print("Input queue size: {}".format(input_queue.qsize()))
                     else:
                         print("Stream/Frame can't open. End of stream.")
                         cap = self.read_cap()
